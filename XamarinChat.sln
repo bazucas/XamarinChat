@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamarinChat.Android", "Xama
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamarinChat.iOS", "XamarinChat\XamarinChat.iOS\XamarinChat.iOS.csproj", "{314C90CE-102E-4EBC-90CB-99FB6C8B4665}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamarinChat", "XamarinChat\XamarinChat\XamarinChat.csproj", "{2B75DDB5-4571-4B08-B126-F4E604465EDE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XamarinChat", "XamarinChat\XamarinChat\XamarinChat.csproj", "{2B75DDB5-4571-4B08-B126-F4E604465EDE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
