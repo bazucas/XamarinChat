@@ -6,13 +6,28 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using XamarinChat.Model;
 using XamarinChat.Service;
+using XamarinChat.View;
 using Message = XamarinChat.View.Message;
 
 namespace XamarinChat.ViewModel
 {
     public class ChatsViewModel : INotifyPropertyChanged
     {
+        private List<Chat> _chats;
+
+        private bool _errorMessage;
         private bool _loading;
+
+        private Chat _selectedItemChat;
+
+        public ChatsViewModel()
+        {
+            Task.Run(LoadChats);
+            AddChatCommand = new Command(AddChat);
+            OrderChatCommand = new Command(OrderChat);
+            UpdateChatCommand = new Command(UpdateChat);
+        }
+
         public bool Loading
         {
             get => _loading;
@@ -23,7 +38,6 @@ namespace XamarinChat.ViewModel
             }
         }
 
-        private bool _errorMessage;
         public bool ErrorMessage
         {
             get => _errorMessage;
@@ -34,7 +48,6 @@ namespace XamarinChat.ViewModel
             }
         }
 
-        private Chat _selectedItemChat;
         public Chat SelectedItemChat
         {
             get => _selectedItemChat;
@@ -46,7 +59,6 @@ namespace XamarinChat.ViewModel
             }
         }
 
-        private List<Chat> _chats;
         public List<Chat> Chats
         {
             get => _chats;
@@ -61,19 +73,13 @@ namespace XamarinChat.ViewModel
         public Command OrderChatCommand { get; set; }
         public Command UpdateChatCommand { get; set; }
 
-        public ChatsViewModel()
-        {
-            Task.Run(LoadChats);
-            AddChatCommand = new Command(AddChat);
-            OrderChatCommand = new Command(OrderChat);
-            UpdateChatCommand = new Command(UpdateChat);
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private void GoToMessagePage(Chat chat)
         {
             if (chat == null) return;
             SelectedItemChat = null;
-            ((NavigationPage)Application.Current.MainPage).Navigation.PushAsync(new Message(chat));
+            ((NavigationPage) Application.Current.MainPage).Navigation.PushAsync(new Message(chat));
         }
 
         private async Task LoadChats()
@@ -94,7 +100,7 @@ namespace XamarinChat.ViewModel
 
         private static void AddChat()
         {
-            ((NavigationPage)Application.Current.MainPage).Navigation.PushAsync(new View.RegisterChat());
+            ((NavigationPage) Application.Current.MainPage).Navigation.PushAsync(new RegisterChat());
         }
 
         private void OrderChat()
@@ -107,7 +113,6 @@ namespace XamarinChat.ViewModel
             Task.Run(LoadChats);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

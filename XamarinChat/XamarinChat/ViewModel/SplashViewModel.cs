@@ -10,14 +10,17 @@ namespace XamarinChat.ViewModel
 {
     public class SplashViewModel : INotifyPropertyChanged
     {
-        private bool _loading;
         private bool _errorMessage;
-
-        public event PropertyChangedEventHandler PropertyChanged;
+        private bool _loading;
+        private string _message;
 
         private string _name;
         private string _password;
-        private string _message;
+
+        public SplashViewModel()
+        {
+            AccessCommand = new Command(AccessApp);
+        }
 
         public bool Loading
         {
@@ -28,9 +31,10 @@ namespace XamarinChat.ViewModel
                 OnPropertyChanged("Loading");
             }
         }
+
         public bool ErrorMessage
         {
-            get { return _errorMessage; }
+            get => _errorMessage;
             set
             {
                 _errorMessage = value;
@@ -47,6 +51,7 @@ namespace XamarinChat.ViewModel
                 OnPropertyChanged("Name");
             }
         }
+
         public string Password
         {
             get => _password;
@@ -56,6 +61,7 @@ namespace XamarinChat.ViewModel
                 OnPropertyChanged("Password");
             }
         }
+
         public string Message
         {
             get => _message;
@@ -68,10 +74,7 @@ namespace XamarinChat.ViewModel
 
         public Command AccessCommand { get; set; }
 
-        public SplashViewModel()
-        {
-            AccessCommand = new Command(AccessApp);
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private async void AccessApp()
         {
@@ -89,7 +92,8 @@ namespace XamarinChat.ViewModel
                 else
                 {
                     UserPersistence.SetLoggedUser(usuarioLogado);
-                    Application.Current.MainPage = new NavigationPage(new Chats()) { BarBackgroundColor = Color.FromHex("#5ED055"), BarTextColor = Color.White };
+                    Application.Current.MainPage = new NavigationPage(new Chats())
+                        {BarBackgroundColor = Color.FromHex("#5ED055"), BarTextColor = Color.White};
                 }
             }
             catch (Exception)
@@ -100,7 +104,6 @@ namespace XamarinChat.ViewModel
             {
                 Loading = false;
             }
-
         }
 
         private void OnPropertyChanged(string propertyName)

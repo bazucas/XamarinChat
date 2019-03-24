@@ -4,12 +4,22 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using XamarinChat.Model;
 using XamarinChat.Service;
+using XamarinChat.View;
 
 namespace XamarinChat.ViewModel
 {
     public class RegisterChatViewModel : INotifyPropertyChanged
     {
+        private bool _errorMessage;
         private bool _loading;
+
+        private string _message;
+
+        public RegisterChatViewModel()
+        {
+            RegisterCommand = new Command(RegisterButton);
+        }
+
         public bool Loading
         {
             get => _loading;
@@ -20,7 +30,6 @@ namespace XamarinChat.ViewModel
             }
         }
 
-        private bool _errorMessage;
         public bool ErrorMessage
         {
             get => _errorMessage;
@@ -33,7 +42,6 @@ namespace XamarinChat.ViewModel
 
         public string Name { get; set; }
 
-        private string _message;
         public string Message
         {
             get => _message;
@@ -46,37 +54,32 @@ namespace XamarinChat.ViewModel
 
         public Command RegisterCommand { get; set; }
 
-        public RegisterChatViewModel()
-        {
-            RegisterCommand = new Command(RegisterButton);
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private void RegisterButton()
         {
             var res = Task.Run(Register).GetAwaiter().GetResult();
 
             if (res != true) return;
-            var currPage = ((NavigationPage)Application.Current.MainPage);
+            var currPage = (NavigationPage) Application.Current.MainPage;
             currPage.PopAsync();
-
         }
+
         private async Task<bool> Register()
         {
             Loading = true;
             ErrorMessage = false;
             try
             {
-                var chat = new Chat { Name = Name };
+                var chat = new Chat {Name = Name};
                 var ok = await ChatService.InsertChat(chat);
                 if (ok)
                 {
-                    var currPage = ((NavigationPage)Application.Current.MainPage);
+                    var currPage = (NavigationPage) Application.Current.MainPage;
 
-                    var chats = (View.Chats)currPage.RootPage;
-                    var vm = (ChatsViewModel)chats.BindingContext;
-                    if (vm.UpdateChatCommand.CanExecute(null))
-                    {
-                        vm.UpdateChatCommand.Execute(null);
-                    }
+                    var chats = (Chats) currPage.RootPage;
+                    var vm = (ChatsViewModel) chats.BindingContext;
+                    if (vm.UpdateChatCommand.CanExecute(null)) vm.UpdateChatCommand.Execute(null);
                     return true;
                 }
 
@@ -93,7 +96,6 @@ namespace XamarinChat.ViewModel
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

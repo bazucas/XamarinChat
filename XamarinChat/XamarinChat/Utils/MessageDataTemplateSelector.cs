@@ -12,7 +12,7 @@ namespace XamarinChat.Utils
         {
             var user = UserPersistence.GetLoggedUser();
 
-            return ((Message)item).IdUser == user.Id ? MyMessagesTemplate : OtherPeopleMessagesTemplate;
+            return ((Message) item).IdUser == user.Id ? MyMessagesTemplate : OtherPeopleMessagesTemplate;
         }
     }
 }

@@ -9,7 +9,7 @@
             <DataTemplate x:Key="MyMessagesTemplate">
                 <ViewCell>
                     <StackLayout Padding="10" Margin="10" BackgroundColor="#5ED055" HorizontalOptions="End">
-                        <Label Text="{Binding Message}" TextColor="White" />
+                        <Label Text="{Binding Msg}" TextColor="White" />
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
@@ -17,16 +17,16 @@
                 <ViewCell>
                     <Frame BorderColor="#5ED055" CornerRadius="0" Padding="10" Margin="10" HorizontalOptions="Start">
                         <StackLayout>
-                            <Label Text="{Binding user.name}" FontSize="10" TextColor="#5ED055"/>
-                            <Label Text="{Binding Message}" TextColor="#5ED055"/>
+                            <Label Text="{Binding User.Name}" FontSize="10" TextColor="#5ED055" />
+                            <Label Text="{Binding Msg}" TextColor="#5ED055" />
                         </StackLayout>
                     </Frame>
                 </ViewCell>
             </DataTemplate>
 
             <util:MessageDataTemplateSelector x:Key="MessageDataTemplateSelector"
-                OtherPeopleMessagesTemplate="{StaticResource OtherPeopleMessagesTemplate}"
-                MyMessagesTemplate="{StaticResource MyMessagesTemplate}" />
+                                              OtherPeopleMessagesTemplate="{StaticResource OtherPeopleMessagesTemplate}"
+                                              MyMessagesTemplate="{StaticResource MyMessagesTemplate}" />
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.ToolbarItems>
@@ -36,21 +36,25 @@
         <AbsoluteLayout>
 
             <StackLayout AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
-                <ListView ItemsSource="{Binding Messages}" HasUnevenRows="True" VerticalOptions="FillAndExpand" ItemTemplate="{StaticResource MessageDataTemplateSelector}">
-                </ListView>
+                <ListView ItemsSource="{Binding Messages}" HasUnevenRows="True" VerticalOptions="FillAndExpand"
+                          ItemTemplate="{StaticResource MessageDataTemplateSelector}" />
 
                 <StackLayout Orientation="Horizontal" VerticalOptions="End">
-                    <Entry Text="{Binding TxtMessage}" Placeholder="Message" BackgroundColor="White" TextColor="#5ED055" HorizontalOptions="FillAndExpand" />
+                    <Entry Text="{Binding TxtMessage}" Placeholder="Message" BackgroundColor="White"
+                           TextColor="#5ED055" HorizontalOptions="FillAndExpand" />
                     <Button Command="{Binding BtnSendCommand}" Text="Send" BackgroundColor="#5ED055" TextColor="White" />
                 </StackLayout>
             </StackLayout>
-            <StackLayout BackgroundColor="#5ED055" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1" IsVisible="{Binding Loading}" x:Name="SLCarregando">
+            <StackLayout BackgroundColor="#5ED055" AbsoluteLayout.LayoutFlags="All"
+                         AbsoluteLayout.LayoutBounds="0,0,1,1" IsVisible="{Binding Loading}" x:Name="SLCarregando">
                 <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
                     <ActivityIndicator IsRunning="True" Color="#FFFFFF" />
                     <Label TextColor="#FFFFFF" Text="Loading messages..." />
                 </StackLayout>
             </StackLayout>
-            <StackLayout  BackgroundColor="#FF4444" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0.9,1,0.1" IsVisible="{Binding ErrorMessage}" Padding="7" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+            <StackLayout BackgroundColor="#FF4444" AbsoluteLayout.LayoutFlags="All"
+                         AbsoluteLayout.LayoutBounds="0,0.9,1,0.1" IsVisible="{Binding ErrorMessage}" Padding="7"
+                         VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
                 <Label Text="Try again!!! Processing problem. (press Update button)" TextColor="#FFFFFF" />
             </StackLayout>
 

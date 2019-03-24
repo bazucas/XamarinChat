@@ -11,10 +11,26 @@ namespace XamarinChat.ViewModel
 {
     public class MessageViewModel : INotifyPropertyChanged
     {
-        private bool _loading;
         private readonly Chat _chat;
-        private List<Message> _messages;
         private bool _errorMessage;
+        private bool _loading;
+        private List<Message> _messages;
+
+        private string _txtMessage;
+
+        public MessageViewModel(Chat chat)
+        {
+            _chat = chat;
+            Task.Run(UpdateMessageAsync);
+            BtnSendCommand = new Command(BtnSend);
+            UpdateMessageAsyncCommand = new Command(UpdateMessage);
+
+            Device.StartTimer(TimeSpan.FromSeconds(1), () =>
+            {
+                Task.Run(UpdateWithoutScreenLoading);
+                return true;
+            });
+        }
 
         public bool ErrorMessage
         {
@@ -25,6 +41,7 @@ namespace XamarinChat.ViewModel
                 OnPropertyChanged("ErrorMessage");
             }
         }
+
         public bool Loading
         {
             get => _loading;
@@ -45,7 +62,6 @@ namespace XamarinChat.ViewModel
             }
         }
 
-        private string _txtMessage;
         public string TxtMessage
         {
             get => _txtMessage;
@@ -59,18 +75,7 @@ namespace XamarinChat.ViewModel
         public Command BtnSendCommand { get; set; }
         public Command UpdateMessageAsyncCommand { get; set; }
 
-        public MessageViewModel(Chat chat)
-        {
-            _chat = chat;
-            Task.Run(UpdateMessageAsync);
-            BtnSendCommand = new Command(BtnSend);
-            UpdateMessageAsyncCommand = new Command(UpdateMessage);
-
-            Device.StartTimer(TimeSpan.FromSeconds(1), () => {
-                Task.Run(UpdateWithoutScreenLoading);
-                return true;
-            });
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private void UpdateMessage()
         {
@@ -100,7 +105,7 @@ namespace XamarinChat.ViewModel
 
         private void BtnSend()
         {
-            var msg = new Message()
+            var msg = new Message
             {
                 IdUser = UserPersistence.GetLoggedUser().Id,
                 Msg = TxtMessage,
@@ -111,7 +116,6 @@ namespace XamarinChat.ViewModel
             TxtMessage = string.Empty;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
