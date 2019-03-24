@@ -12,7 +12,7 @@ namespace XamarinChat.View
         {
             InitializeComponent();
 
-            BindingContext = new MessageViewModel(chat, SlMessageContainer);
+            BindingContext = new MessageViewModel(chat);
         }
     }
 }

@@ -1,22 +1,39 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using XamarinChat.Model;
 using XamarinChat.Service;
-using XamarinChat.View;
 
 namespace XamarinChat.ViewModel
 {
     public class RegisterChatViewModel : INotifyPropertyChanged
     {
-        private string _message;
-
-        public RegisterChatViewModel()
+        private bool _loading;
+        public bool Loading
         {
-            CadastrarCommand = new Command(Cadastrar);
+            get => _loading;
+            set
+            {
+                _loading = value;
+                OnPropertyChanged("Loading");
+            }
+        }
+
+        private bool _errorMessage;
+        public bool ErrorMessage
+        {
+            get => _errorMessage;
+            set
+            {
+                _errorMessage = value;
+                OnPropertyChanged("ErrorMessage");
+            }
         }
 
         public string Name { get; set; }
 
+        private string _message;
         public string Message
         {
             get => _message;
@@ -27,28 +44,56 @@ namespace XamarinChat.ViewModel
             }
         }
 
-        public Command CadastrarCommand { get; set; }
+        public Command RegisterCommand { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void Cadastrar()
+        public RegisterChatViewModel()
         {
-            var chat = new Chat {Name = Name};
-            var ok = ChatService.InsertChat(chat);
-            if (ok)
+            RegisterCommand = new Command(RegisterButton);
+        }
+        private void RegisterButton()
+        {
+            var res = Task.Run(Register).GetAwaiter().GetResult();
+
+            if (res != true) return;
+            var currPage = ((NavigationPage)Application.Current.MainPage);
+            currPage.PopAsync();
+
+        }
+        private async Task<bool> Register()
+        {
+            Loading = true;
+            ErrorMessage = false;
+            try
             {
-                ((NavigationPage) Application.Current.MainPage).Navigation.PopAsync();
-                var nav = (NavigationPage) Application.Current.MainPage;
-                var chats = (Chats) nav.CurrentPage;
-                var viewModel = (ChatsViewModel) chats.BindingContext;
-                if (viewModel.UpdateChatCommand.CanExecute(null)) viewModel.UpdateChatCommand.Execute(null);
-            }
-            else
-            {
+                var chat = new Chat { Name = Name };
+                var ok = await ChatService.InsertChat(chat);
+                if (ok)
+                {
+                    var currPage = ((NavigationPage)Application.Current.MainPage);
+
+                    var chats = (View.Chats)currPage.RootPage;
+                    var vm = (ChatsViewModel)chats.BindingContext;
+                    if (vm.UpdateChatCommand.CanExecute(null))
+                    {
+                        vm.UpdateChatCommand.Execute(null);
+                    }
+                    return true;
+                }
+
                 Message = "Registration Error!";
+                Loading = false;
+                return false;
+            }
+            catch (Exception e)
+            {
+                ErrorMessage = true;
+                Message = e.Message;
+                Loading = false;
+                return false;
             }
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -1,15 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="XamarinChat.View.RegisterChat"
              BackgroundColor="#5ED055">
     <ContentPage.Content>
-        <StackLayout>
-            <Entry Text="{Binding name}" Placeholder="Chat Name" PlaceholderColor="#5ED055" BackgroundColor="White"
-                   TextColor="#5ED055" />
-            <Button BackgroundColor="Transparent" Text="Register" TextColor="White" Command="{Binding RegisterCommand}" />
-            <Label Text="{Binding message}" TextColor="White" />
-        </StackLayout>
+        <AbsoluteLayout>
+            <StackLayout AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+                <Entry Text="{Binding Name}" Placeholder="Chat Name" PlaceholderColor="#5ED055" BackgroundColor="White" TextColor="#5ED055"/>
+                <Button BackgroundColor="Transparent" Text="Register" TextColor="White" Command="{Binding RegisterCommand}" />
+                <Label Text="{Binding Message}" TextColor="White"/>
+            </StackLayout>
+
+            <StackLayout BackgroundColor="#5ED055" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1" IsVisible="{Binding Loading}" x:Name="SlLoading">
+                <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                    <ActivityIndicator IsRunning="True" Color="#FFFFFF" />
+                    <Label TextColor="#FFFFFF" Text="Registering chats/rooms..." />
+                </StackLayout>
+            </StackLayout>
+
+            <StackLayout  BackgroundColor="#FF4444" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,1,1,0.1" IsVisible="{Binding ErrorMessage}" Padding="7" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                <Label Text="Try again!!! Processing problem." TextColor="#FFFFFF" />
+            </StackLayout>
+        </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>

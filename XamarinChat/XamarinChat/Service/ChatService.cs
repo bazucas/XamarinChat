@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using XamarinChat.Model;
 
@@ -10,56 +12,52 @@ namespace XamarinChat.Service
     {
         private const string BaseAddress = "http://ws.spacedu.com.br/xf2018/rest/api";
 
-        public static User GetUser(User user)
+        public static async Task<User> GetUser(User user)
         {
-            const string url = BaseAddress + "/User";
+            const string url = BaseAddress + "/usuario";
             /*
              * QueryString: ?q=Footbal&tipo=imagem
-             * StringContent param = new StringContent(string.Format("?nome={0}&password={1}", User.nome, User.password));
+             * StringContent param = new StringContent(string.Format("?name={0}&password={1}", user.name, user.password));
              */
-            var param = new FormUrlEncodedContent(new[]
-            {
-                new KeyValuePair<string, string>("nome", user.Name),
-                new KeyValuePair<string, string>("password", user.Password)
+            var param = new FormUrlEncodedContent(new[] {
+                new KeyValuePair<string,string>("nome",user.Name),
+                new KeyValuePair<string,string>("password", user.Password)
             });
             var req = new HttpClient();
-            var resp = req.PostAsync(url, param).GetAwaiter().GetResult();
+            var resp = await req.PostAsync(url, param);
             if (resp.StatusCode != HttpStatusCode.OK) return null;
-            var content = resp.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var content = await resp.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<User>(content);
         }
 
-        public static List<Chat> GetChats()
+        public static async Task<List<Chat>> GetChats()
         {
             const string url = BaseAddress + "/chats";
             var req = new HttpClient();
-            var resp = req.GetAsync(url).GetAwaiter().GetResult();
-            if (resp.StatusCode != HttpStatusCode.OK) return null;
-            var content = resp.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var resp = await req.GetAsync(url);
+            if (resp.StatusCode != HttpStatusCode.OK) throw new Exception("HTTP response code: " + resp.StatusCode);
+            var content = await resp.Content.ReadAsStringAsync();
             if (content.Length <= 2) return null;
-            var list = JsonConvert.DeserializeObject<List<Chat>>(content);
-            return list;
-        }
+            var lista = JsonConvert.DeserializeObject<List<Chat>>(content);
+            return lista;
 
-        public static bool InsertChat(Chat chat)
+        }
+        public static async Task<bool> InsertChat(Chat chat)
         {
             const string url = BaseAddress + "/chat";
-            var param = new FormUrlEncodedContent(new[]
-            {
-                new KeyValuePair<string, string>("nome", chat.Name)
+            var param = new FormUrlEncodedContent(new[] {
+                new KeyValuePair<string,string>("nome", chat.Name)
             });
             var req = new HttpClient();
-            var resp = req.PostAsync(url, param).GetAwaiter().GetResult();
-
+            var resp = await req.PostAsync(url, param);
             return resp.StatusCode == HttpStatusCode.OK;
         }
 
         public static bool RenameChat(Chat chat)
         {
             var url = BaseAddress + "/chat/" + chat.Id;
-            var param = new FormUrlEncodedContent(new[]
-            {
-                new KeyValuePair<string, string>("nome", chat.Name)
+            var param = new FormUrlEncodedContent(new[] {
+                new KeyValuePair<string,string>("nome", chat.Name)
             });
             var req = new HttpClient();
             var resp = req.PutAsync(url, param).GetAwaiter().GetResult();
@@ -74,34 +72,34 @@ namespace XamarinChat.Service
             return resp.StatusCode == HttpStatusCode.OK;
         }
 
-        public static List<Message> GetMessagesFromChat(Chat chat)
+        public static async Task<List<Message>> GetChatMessages(Chat chat)
         {
             var url = BaseAddress + "/chat/" + chat.Id + "/msg";
             var req = new HttpClient();
-            var resp = req.GetAsync(url).GetAwaiter().GetResult();
+            var resp = await req.GetAsync(url);
             if (resp.StatusCode != HttpStatusCode.OK) return null;
-            var content = resp.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var content = await resp.Content.ReadAsStringAsync();
+            if (content == null) return null;
             if (content.Length <= 2) return null;
-            var list = JsonConvert.DeserializeObject<List<Message>>(content);
-            return list;
+            var lista = JsonConvert.DeserializeObject<List<Message>>(content);
+            return lista;
         }
 
-        public static bool InsertMessage(Message mensagem)
+        public static bool InsertMessage(Message message)
         {
-            var url = BaseAddress + "/chat/" + mensagem.IdChat + "/msg";
-            var param = new FormUrlEncodedContent(new[]
-            {
-                new KeyValuePair<string, string>("mensagem", mensagem.Msg),
-                new KeyValuePair<string, string>("id_User", mensagem.IdUser.ToString())
+            var url = BaseAddress + "/chat/" + message.IdChat + "/msg";
+            var param = new FormUrlEncodedContent(new[] {
+                new KeyValuePair<string,string>("mensagem", message.Msg),
+                new KeyValuePair<string,string>("id_usuario", message.IdUser.ToString())
             });
             var req = new HttpClient();
             var resp = req.PostAsync(url, param).GetAwaiter().GetResult();
             return resp.StatusCode == HttpStatusCode.OK;
         }
 
-        public static bool DeleteMessage(Message mensagem)
+        public static bool DeleteMessage(Message message)
         {
-            var url = BaseAddress + "/chat/" + mensagem.IdChat + "/delete/" + mensagem.Id;
+            var url = BaseAddress + "/chat/" + message.IdChat + "/delete/" + message.Id;
             var req = new HttpClient();
             var resp = req.DeleteAsync(url).GetAwaiter().GetResult();
             return resp.StatusCode == HttpStatusCode.OK;
