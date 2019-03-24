@@ -1,12 +1,21 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="XamarinChat.View.Splash">
+             x:Class="XamarinChat.View.Splash"
+             BackgroundColor="#5ED055">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <Label Text="XamarinChat" TextColor="White" />
+            <StackLayout
+                VerticalOptions="CenterAndExpand"
+                HorizontalOptions="CenterAndExpand">
+                <Entry Text="{Binding Name}" BackgroundColor="White" TextColor="#5ED055" />
+                <Entry Text="{Binding Password}" IsPassword="True" BackgroundColor="White" TextColor="#5ED055" />
+                <Button BackgroundColor="Transparent" TextColor="White" Text="Login/Register"
+                        Command="{Binding AccessCommand}" />
+                <Label Text="{Binding Message}" TextColor="White" />
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

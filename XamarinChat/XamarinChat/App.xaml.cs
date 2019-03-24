@@ -1,6 +1,5 @@
-﻿using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using Xamarin.Forms;
+using XamarinChat.View;
 
 namespace XamarinChat
 {
@@ -10,7 +9,7 @@ namespace XamarinChat
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            MainPage = new Splash();
         }
 
         protected override void OnStart()

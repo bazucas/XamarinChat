@@ -1,12 +1,26 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="XamarinChat"
              x:Class="XamarinChat.View.Chats">
+    <ContentPage.ToolbarItems>
+        <!-- TODO - Add Items -->
+        <ToolbarItem Icon="add.png" Text="Add new Chat" Command="{Binding AddChatCommand}" />
+        <ToolbarItem Icon="sort.png" Text="Order alphabetically" Command="{Binding OrderChatCommand}" />
+        <ToolbarItem Icon="refresh.png" Text="Refresh chat list" Command="{Binding UpdateChatCommand}" />
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <ListView ItemsSource="{Binding Chats}" SelectedItem="{Binding SelectedItemChat, Mode=TwoWay}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Padding="10">
+                            <Label Text="{Binding name}" TextColor="#5ED055" />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </ContentPage.Content>
 </ContentPage>

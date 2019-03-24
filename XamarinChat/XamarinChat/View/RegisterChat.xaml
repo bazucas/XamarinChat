@@ -1,12 +1,15 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="XamarinChat.View.RegisterChat">
+             x:Class="XamarinChat.View.RegisterChat"
+             BackgroundColor="#5ED055">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <Entry Text="{Binding name}" Placeholder="Chat Name" PlaceholderColor="#5ED055" BackgroundColor="White"
+                   TextColor="#5ED055" />
+            <Button BackgroundColor="Transparent" Text="Register" TextColor="White" Command="{Binding RegisterCommand}" />
+            <Label Text="{Binding message}" TextColor="White" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -17,9 +17,10 @@ namespace XamarinChat.Service
              * QueryString: ?q=Footbal&tipo=imagem
              * StringContent param = new StringContent(string.Format("?nome={0}&password={1}", User.nome, User.password));
              */
-            var param = new FormUrlEncodedContent(new[] {
-                new KeyValuePair<string,string>("nome", user.Name),
-                new KeyValuePair<string,string>("password", user.Password)
+            var param = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("nome", user.Name),
+                new KeyValuePair<string, string>("password", user.Password)
             });
             var req = new HttpClient();
             var resp = req.PostAsync(url, param).GetAwaiter().GetResult();
@@ -39,11 +40,13 @@ namespace XamarinChat.Service
             var list = JsonConvert.DeserializeObject<List<Chat>>(content);
             return list;
         }
+
         public static bool InsertChat(Chat chat)
         {
             const string url = BaseAddress + "/chat";
-            var param = new FormUrlEncodedContent(new[] {
-                new KeyValuePair<string,string>("nome", chat.Name)
+            var param = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("nome", chat.Name)
             });
             var req = new HttpClient();
             var resp = req.PostAsync(url, param).GetAwaiter().GetResult();
@@ -54,8 +57,9 @@ namespace XamarinChat.Service
         public static bool RenameChat(Chat chat)
         {
             var url = BaseAddress + "/chat/" + chat.Id;
-            var param = new FormUrlEncodedContent(new[] {
-                new KeyValuePair<string,string>("nome", chat.Name)
+            var param = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("nome", chat.Name)
             });
             var req = new HttpClient();
             var resp = req.PutAsync(url, param).GetAwaiter().GetResult();
@@ -80,15 +84,15 @@ namespace XamarinChat.Service
             if (content.Length <= 2) return null;
             var list = JsonConvert.DeserializeObject<List<Message>>(content);
             return list;
-
         }
 
         public static bool InsertMessage(Message mensagem)
         {
             var url = BaseAddress + "/chat/" + mensagem.IdChat + "/msg";
-            var param = new FormUrlEncodedContent(new[] {
-                new KeyValuePair<string,string>("mensagem", mensagem.Msg),
-                new KeyValuePair<string,string>("id_User", mensagem.IdUser.ToString())
+            var param = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("mensagem", mensagem.Msg),
+                new KeyValuePair<string, string>("id_User", mensagem.IdUser.ToString())
             });
             var req = new HttpClient();
             var resp = req.PostAsync(url, param).GetAwaiter().GetResult();
