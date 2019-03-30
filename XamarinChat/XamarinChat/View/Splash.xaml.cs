@@ -11,7 +11,7 @@ namespace XamarinChat.View
         {
             InitializeComponent();
 
-            BindingContext = new SplashViewModel();
+            BindingContext = ViewModelLocator.SplashViewModel;
         }
     }
 }

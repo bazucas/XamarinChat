@@ -11,7 +11,7 @@ namespace XamarinChat.View
         {
             InitializeComponent();
 
-            BindingContext = new ChatsViewModel();
+            BindingContext = ViewModelLocator.ChatsViewModel;
         }
     }
 }

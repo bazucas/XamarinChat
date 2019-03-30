@@ -1,4 +1,7 @@
-﻿using Xamarin.Forms;
+﻿using CommonServiceLocator;
+using Unity;
+using Unity.ServiceLocation;
+using Xamarin.Forms;
 using XamarinChat.View;
 
 namespace XamarinChat
@@ -8,6 +11,14 @@ namespace XamarinChat
         public App()
         {
             InitializeComponent();
+
+            var uContainer = new UnityContainer();
+            uContainer.RegisterType<Splash>();
+            uContainer.RegisterType<RegisterChat>();
+            uContainer.RegisterType<Message>();
+            uContainer.RegisterType<Chats>();
+            
+            ServiceLocator.SetLocatorProvider(() => new UnityServiceLocator(uContainer)); 
 
             MainPage = new Splash();
         }
